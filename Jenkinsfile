@@ -41,7 +41,7 @@ pipeline {
         stage('Build application for beta') {
             when {
                 expression {
-                    return env.shouldBuild != "false"
+                    return env.shouldBuild == "false"
                 }
             }
             steps {
