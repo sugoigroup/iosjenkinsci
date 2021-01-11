@@ -39,37 +39,12 @@ pipeline {
         }
 
         stage('Build application for beta') {
-            when {
-                expression {
-                    return env.shouldBuild == "false"
-                }
-            }
             steps {
                 sh "fastlane make_debug_ipa"
             }
         }
 
 
-        stage('Run Unit and UI Tests') {
-
-
-
-            when {
-                expression {
-                    return env.shouldBuild != "false"
-                }
-            }
-            steps {
-                script {
-                    try {
-                        // Run all the tests
-                    } catch(exc) {
-                        currentBuild.result = "UNSTABLE"
-                        error('There are failed tests.')
-                    }
-                }
-            }
-        }
 
 
     }
