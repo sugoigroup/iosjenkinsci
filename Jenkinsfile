@@ -34,18 +34,26 @@ pipeline {
                         currentBuild.result = "NOT_BUILT"
                     }
 
-                    slackMessage = "*${env.JOB_NAME}* *${env.BRANCH_NAME}* received a new commit. ${skippingText}\nHere is commmit info: ${lastCommitInfo}"
                 }
             }
         }
 
-        stage('Send info to Slack') {
+        stage('Build application for beta') {
+            when {
+                expression {
+                    return env.shouldBuild != "false"
+                }
+            }
             steps {
-                slackSend color: "#2222FF", message: slackMessage
+                sh "fastlane make_debug_ipa"
             }
         }
 
+
         stage('Run Unit and UI Tests') {
+
+
+
             when {
                 expression {
                     return env.shouldBuild != "false"
@@ -64,24 +72,6 @@ pipeline {
         }
 
 
-        stage('Inform Slack for success') {
-            when {
-                expression {
-                    return env.shouldBuild != "false"
-                }
-            }
-            steps {
-                slackSend color: "good", message: "*${env.JOB_NAME}* *${env.BRANCH_NAME}* job is completed successfully"
-            }
-        }
     }
 
-    post {
-        failure {
-            slackSend color: "danger", message: "*${env.JOB_NAME}* *${env.BRANCH_NAME}* job is failed"
-        }
-        unstable {
-            slackSend color: "danger", message: "*${env.JOB_NAME}* *${env.BRANCH_NAME}* job is unstable. Unstable means test failure, code violation etc."
-        }
-    }
 }
