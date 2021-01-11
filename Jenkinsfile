@@ -40,6 +40,7 @@ pipeline {
 
         stage('Build application for beta') {
             steps {
+		sh "ls"
                 sh "fastlane make_debug_ipa"
             }
         }
