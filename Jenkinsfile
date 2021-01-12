@@ -41,6 +41,7 @@ pipeline {
         stage('Build application for beta') {
             steps {
 		sh "ls"
+                sh "/Users/kimtaeho/temp/unlockme.sh"
                 sh "/usr/local/bin/fastlane make_debug_ipa"
             }
         }
